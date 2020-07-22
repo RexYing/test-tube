@@ -64,6 +64,11 @@ def optimize_parallel_cpu_private(args):
     return [trial_params, results]
 
 
+# called by the Pool when a process starts
+def init(local_gpu_q):
+    global g_gpu_id_q
+    g_gpu_id_q = local_gpu_q
+
 class HyperOptArgumentParser(ArgumentParser):
     """
     Subclass of argparse ArgumentParser which adds optional calls to sample from lists or ranges
@@ -313,9 +318,9 @@ class HyperOptArgumentParser(ArgumentParser):
                 gpu_q.put(gpu_id)
 
             # called by the Pool when a process starts
-            def init(local_gpu_q):
-                global g_gpu_id_q
-                g_gpu_id_q = local_gpu_q
+            #def init(local_gpu_q):
+            #    global g_gpu_id_q
+            #    g_gpu_id_q = local_gpu_q
 
             # init a pool with the nb of worker threads we want
             nb_workers = len(gpu_ids)
@@ -352,9 +357,9 @@ class HyperOptArgumentParser(ArgumentParser):
                 gpu_q.put(gpu_id)
 
             # called by the Pool when a process starts
-            def init(local_gpu_q):
-                global g_gpu_id_q
-                g_gpu_id_q = local_gpu_q
+            #def init(local_gpu_q):
+            #    global g_gpu_id_q
+            #    g_gpu_id_q = local_gpu_q
 
             # init a pool with the nb of worker threads we want
             self.pool = Pool(processes=nb_workers, initializer=init, initargs=(gpu_q,))
